@@ -23,7 +23,37 @@ class ViewController: UIViewController {
         // The tableView is going to get data from the viewController like the toDoArray
     }
 
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "EditItem" { // If we clicked on a cell
+            let destination = segue.destination as! DetailViewController // Force it to look specifically at DetialViewController
+            let index = tableView.indexPathForSelectedRow!.row // We can force unwrap becuase we have to click on a valid cell for this to happen
+            destination.toDoItem = toDoArray[index] // We can access the destination's variable toDoItem from this class and give it data
+        } else {
+            // To get rid of the case where we've clicked on the plus but we still have a lingering selection
+            // BC if we aren't using the EditItem we must be using the AddItem
+            if let selectedPath = tableView.indexPathForSelectedRow {
+                tableView.deselectRow(at: selectedPath, animated: false)
+            }
+        }
+    }
+    
+    @IBAction func unwindFromDetialViewController(segue: UIStoryboardSegue) {
+        let sourceViewController = segue.source as! DetailViewController
+        // Lets grab the source
+        if let indexPath = tableView.indexPathForSelectedRow {
+            // is there an index we can grab from the row that was clicked on?
+            toDoArray[indexPath.row] = sourceViewController.toDoItem!
+            // update the array with the new value at the index that it used to be in
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            // update the table at the array of indexes that were changed
+        } else {
+            // Must have pressed plus button
+            let newIndexPath = IndexPath(row: toDoArray.count, section: 0)
+            toDoArray.append(sourceViewController.toDoItem!)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        }
+        
+    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -49,7 +79,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// 5.2 Notes
 
 // 5.1 Notes
 // Extension I believe is inheritance

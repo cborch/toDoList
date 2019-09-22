@@ -11,11 +11,21 @@ import UIKit
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var toDoField: UITextField!
+    var toDoItem: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let toDoItem = toDoItem { // If its not nil(if assignment from String? to String works)
+            toDoField.text = toDoItem
+        }
 
-
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "UnwindFromSave" {
+            toDoItem = toDoField.text
+        }
     }
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
@@ -28,6 +38,12 @@ class DetailViewController: UIViewController {
         }
     }
 }
+
+// 5.3 Notes
+// Passing data between viewControllers
+// When you do this one will be the Source and one will be the Destination
+// - The desitnation will have to have a var to catch the data from the source
+// - Use prepare for segue
 
 // Navigation controllers manage the stack of viewControllers
 // Also add a navigation bar with navigation bar buttons
@@ -43,3 +59,6 @@ class DetailViewController: UIViewController {
 // When you present modally you dismiss to go back
 
 // When you show you pop to go back 
+
+// Unwind = returning from where we started from
+// - Have a condition here where when we press save we want code to be executed back on the main ViewContoller 
