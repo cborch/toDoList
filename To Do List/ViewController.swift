@@ -49,6 +49,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// 5.2 Notes
+
 // 5.1 Notes
 // Extension I believe is inheritance
 // - Adding protocols to ViewController
