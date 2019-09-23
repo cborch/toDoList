@@ -4,7 +4,7 @@
 //
 //  Created by Carter Borchetta on 9/22/19.
 //  Copyright © 2019 Carter Borchetta. All rights reserved.
-// Class Version
+//
 
 import UIKit
 
