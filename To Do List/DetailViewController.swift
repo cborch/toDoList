@@ -10,6 +10,8 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    
+    @IBOutlet weak var saveBarButton: UIBarButtonItem!
     @IBOutlet weak var toDoField: UITextField!
     var toDoItem: String?
     
@@ -19,6 +21,8 @@ class DetailViewController: UIViewController {
         if let toDoItem = toDoItem { // If its not nil(if assignment from String? to String works)
             toDoField.text = toDoItem
         }
+        enableDisableSaveButton()
+        toDoField.becomeFirstResponder()
 
     }
     
@@ -27,6 +31,27 @@ class DetailViewController: UIViewController {
             toDoItem = toDoField.text
         }
     }
+    
+    func enableDisableSaveButton() {
+        if let toDoFieldCount = toDoField.text?.count, toDoFieldCount > 0 {
+            saveBarButton.isEnabled = true
+        } else {
+            saveBarButton.isEnabled = false
+        }
+    }
+    
+    @IBAction func toDoFieldChanged(_ sender: UITextField) {
+    // Responds anytime editing inside is changed
+        enableDisableSaveButton()
+
+        
+//        if toDoField.text!.count > 0 { // We can force unwrap safely becuase even an empty text field is an empty string so it won't ever be nil
+//            saveBarButton.isEnabled = true
+//        } else {
+//            saveBarButton.isEnabled = false
+//        }
+    }
+    
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
         let isPresentingInAddMode = presentingViewController is UINavigationController
