@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var addBarButton: UIBarButtonItem!
     
     var toDoArray = ["Learn Swift", "Build Apps", "Change the World!"]
+    var toDoNotesArray = ["Test 1", "Test 2", "Test 3"]
     
 
     override func viewDidLoad() {
@@ -30,6 +31,7 @@ class ViewController: UIViewController {
             let destination = segue.destination as! DetailViewController // Force it to look specifically at DetialViewController
             let index = tableView.indexPathForSelectedRow!.row // We can force unwrap becuase we have to click on a valid cell for this to happen
             destination.toDoItem = toDoArray[index] // We can access the destination's variable toDoItem from this class and give it data
+            destination.toDoNoteItem = toDoNotesArray[index]
         } else {
             // To get rid of the case where we've clicked on the plus but we still have a lingering selection
             // BC if we aren't using the EditItem we must be using the AddItem
@@ -46,12 +48,14 @@ class ViewController: UIViewController {
             // is there an index we can grab from the row that was clicked on?
             toDoArray[indexPath.row] = sourceViewController.toDoItem!
             // update the array with the new value at the index that it used to be in
+            toDoNotesArray[indexPath.row] = sourceViewController.toDoNoteItem!
             tableView.reloadRows(at: [indexPath], with: .automatic)
             // update the table at the array of indexes that were changed
         } else {
-            // Must have pressed plus button
+            // Must have pressed plus button(Coming back from adding new item)
             let newIndexPath = IndexPath(row: toDoArray.count, section: 0)
             toDoArray.append(sourceViewController.toDoItem!)
+            toDoNotesArray.append(sourceViewController.toDoNoteItem!)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
         
@@ -76,6 +80,7 @@ class ViewController: UIViewController {
         // - Both are built into the .delete style of editing
         if editingStyle == .delete {
             toDoArray.remove(at: indexPath.row)
+            toDoNotesArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -84,8 +89,11 @@ class ViewController: UIViewController {
         // Getting the move row functionality working
         // We copy the source and move it to destiantion
         let itemToMove = toDoArray[sourceIndexPath.row]
+        let noteToMove = toDoNotesArray[sourceIndexPath.row]
         toDoArray.remove(at: sourceIndexPath.row)
+        toDoNotesArray.remove(at: sourceIndexPath.row)
         toDoArray.insert(itemToMove, at: destinationIndexPath.row)
+        toDoNotesArray.insert(noteToMove, at: destinationIndexPath.row)
     }
     
 }
@@ -105,6 +113,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = toDoArray[indexPath.row]
         // Add some text to the cell
         // - Cells automatically have a textLabel object in it
+        cell.detailTextLabel?.text = toDoNotesArray[indexPath.row]
         return cell
         // Asks the data source for a cell to insert at some location on the table view
         // Called when a cell is needed either recycled or new
