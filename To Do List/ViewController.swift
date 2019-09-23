@@ -11,6 +11,8 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var editBarButton: UIBarButtonItem!
+    @IBOutlet weak var addBarButton: UIBarButtonItem!
     
     var toDoArray = ["Learn Swift", "Build Apps", "Change the World!"]
     
@@ -54,6 +56,38 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    @IBAction func editBarButtonPressed(_ sender: UIBarButtonItem) { // Getting the editing bar button working depedning on if in edimting mode or not it has to push you back to the other mode when you press the button
+        if tableView.isEditing {
+            // When the button is pressed and we are in editing mode we want to set UI back to normal(non-editing)
+            tableView.setEditing(false, animated: true)
+            addBarButton.isEnabled = true
+            editBarButton.title = "Edit"
+        } else {
+            tableView.setEditing(true, animated: true)
+            addBarButton.isEnabled = false
+            editBarButton.title = "Done"
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        // Getting the delete functionality working for both editing and swipe left
+        // - Both are built into the .delete style of editing
+        if editingStyle == .delete {
+            toDoArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // Getting the move row functionality working
+        // We copy the source and move it to destiantion
+        let itemToMove = toDoArray[sourceIndexPath.row]
+        toDoArray.remove(at: sourceIndexPath.row)
+        toDoArray.insert(itemToMove, at: destinationIndexPath.row)
+    }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
