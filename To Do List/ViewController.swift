@@ -14,9 +14,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var editBarButton: UIBarButtonItem!
     @IBOutlet weak var addBarButton: UIBarButtonItem!
     
-    var toDoArray = ["Learn Swift", "Build Apps", "Change the World!"]
-    var toDoNotesArray = ["Test 1", "Test 2", "Test 3"]
-    
+    var defaultsData = UserDefaults.standard
+    //var toDoArray = ["Learn Swift", "Build Apps", "Change the World!"]
+    //var toDoNotesArray = ["Test 1", "Test 2", "Test 3", "Test 4"]
+    var toDoArray = [String]()
+    var toDoNotesArray = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +26,15 @@ class ViewController: UIViewController {
         // The tableView is going to send messages out and they should be recieved by the viewController
         tableView.dataSource = self
         // The tableView is going to get data from the viewController like the toDoArray
+        
+        // Reading in the data at view load
+        toDoArray = defaultsData.stringArray(forKey: "toDoArray") ?? [String]()
+        toDoNotesArray = defaultsData.stringArray(forKey: "toDoNotesArray") ?? [String]()
+    }
+    
+    func saveDefaultsData() {
+        defaultsData.set(toDoArray, forKey: "toDoArray")
+        defaultsData.set(toDoNotesArray, forKey: "toDoNotesArray")
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -58,6 +69,7 @@ class ViewController: UIViewController {
             toDoNotesArray.append(sourceViewController.toDoNoteItem!)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
+        saveDefaultsData()
         
     }
     
@@ -82,6 +94,8 @@ class ViewController: UIViewController {
             toDoArray.remove(at: indexPath.row)
             toDoNotesArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            defaultsData.set(toDoArray, forKey: "toDoArray")
+            defaultsData.set(toDoNotesArray, forKey: "toDoNotesArray")
         }
     }
     
@@ -94,6 +108,7 @@ class ViewController: UIViewController {
         toDoNotesArray.remove(at: sourceIndexPath.row)
         toDoArray.insert(itemToMove, at: destinationIndexPath.row)
         toDoNotesArray.insert(noteToMove, at: destinationIndexPath.row)
+        saveDefaultsData()
     }
     
 }

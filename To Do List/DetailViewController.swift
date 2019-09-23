@@ -4,7 +4,7 @@
 //
 //  Created by Carter Borchetta on 9/22/19.
 //  Copyright © 2019 Carter Borchetta. All rights reserved.
-//
+// Class Version
 
 import UIKit
 
@@ -21,7 +21,12 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         if let toDoItem = toDoItem { // If its not nil(if assignment from String? to String works)
+            // If it isn't nil then we have an item here which means we are in editing mode
             toDoField.text = toDoItem
+            self.navigationItem.title = "Edit To Do Item"
+        } else {
+            // If we are in here it was nil and therefore we are creating a new todo
+            self.navigationItem.title = "New To Do Item"
         }
         
         if let toDoNoteItem = toDoNoteItem {
